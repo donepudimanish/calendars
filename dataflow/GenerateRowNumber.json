@@ -1,0 +1,62 @@
+{
+	"name": "GenerateRowNumber",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "SnowflakeTable2",
+						"type": "DatasetReference"
+					},
+					"name": "source1"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "ADLSsink",
+						"type": "DatasetReference"
+					},
+					"name": "sink1"
+				}
+			],
+			"transformations": [
+				{
+					"name": "window1"
+				},
+				{
+					"name": "derivedColumn1"
+				}
+			],
+			"scriptLines": [
+				"source(output(",
+				"          LISTING_ID as decimal(38,0),",
+				"          DATE as date,",
+				"          AVAILABLE as boolean,",
+				"          PRICE as string,",
+				"          ADJUSTED_PRICE as string,",
+				"          MINIMUM_NIGHTS as decimal(38,0),",
+				"          MAXIMUM_NIGHTS as decimal(38,0)",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'table') ~> source1",
+				"source1 window(asc(DATE, true),",
+				"     rowNumber = rowNumber()) ~> window1",
+				"window1 derive(batch_number = toInteger(ceil(rowNumber / 250000))) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:['calendar_#.csv'],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('dynamicRange', 2,",
+				"          batch_number",
+				"     )) ~> sink1"
+			]
+		}
+	}
+}

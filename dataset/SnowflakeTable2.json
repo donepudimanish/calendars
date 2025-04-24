@@ -1,0 +1,52 @@
+{
+	"name": "SnowflakeTable2",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "Snowflakemd1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SnowflakeV2Table",
+		"schema": [
+			{
+				"name": "LISTING_ID",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "DATE",
+				"type": "DATE"
+			},
+			{
+				"name": "AVAILABLE",
+				"type": "BOOLEAN"
+			},
+			{
+				"name": "PRICE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "ADJUSTED_PRICE",
+				"type": "VARCHAR"
+			},
+			{
+				"name": "MINIMUM_NIGHTS",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			},
+			{
+				"name": "MAXIMUM_NIGHTS",
+				"type": "NUMBER",
+				"precision": 38,
+				"scale": 0
+			}
+		],
+		"typeProperties": {
+			"schema": "PUBLIC",
+			"table": "CALENDER"
+		}
+	},
+	"type": "Microsoft.DataFactory/factories/datasets"
+}
